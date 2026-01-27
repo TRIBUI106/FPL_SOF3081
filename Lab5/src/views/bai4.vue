@@ -1,14 +1,13 @@
-<script>
+<script setup>
 import { ref } from 'vue';
 import CreatePost from '../CreatePost.vue';
 import PostList from '../PostList.vue';
 
 const posts = ref([]);
 
-function submitPost(post) {
+const submitPost = (post) => {
     posts.value.push(post);
 }
-
 </script>
 
 <template>
