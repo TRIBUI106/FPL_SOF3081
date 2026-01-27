@@ -4,13 +4,15 @@ import Register from '../views/Register.vue';
 import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import PostDetail from '../views/PostDetail.vue';
+import Search from '../views/Search.vue';
 
 const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
   { path: '/register', component: Register },
   { path: '/profile', component: Profile },
-  { path: '/post', component: PostDetail },
+  { path: '/post/:id', component: PostDetail },
+  { path: '/search', component: Search },
 ];
 
 const router = createRouter({

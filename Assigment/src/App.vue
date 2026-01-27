@@ -13,8 +13,10 @@
           <input 
             type="text" 
             placeholder="🔍 Tìm kiếm bài viết..."
-            @input="searchQuery = $event.target.value"
+            v-model="searchQuery"
+            @keyup.enter="performSearch"
           >
+          <button @click="performSearch" class="search-submit">🔍</button>
         </div>
       </div>
 
@@ -66,8 +68,10 @@
         <input 
           type="text" 
           placeholder="🔍 Tìm kiếm..."
-          @input="searchQuery = $event.target.value"
+          v-model="searchQuery"
+          @keyup.enter="performSearch"
         >
+        <button @click="performSearch" class="search-submit">🔍</button>
       </div>
       <router-link to="/" class="mobile-link" @click="showMobileMenu = false">Trang chủ</router-link>
       <router-link v-if="!isLoggedIn" to="/login" class="mobile-link" @click="showMobileMenu = false">Đăng nhập</router-link>
@@ -118,6 +122,12 @@ const handleLogout = () => {
   showUserMenu.value = false;
   showMobileMenu.value = false;
   router.push('/');
+};
+
+const performSearch = () => {
+  if (searchQuery.value.trim()) {
+    router.push('/search');
+  }
 };
 
 // Close user menu when clicking outside
@@ -194,10 +204,12 @@ if (typeof window !== 'undefined') {
 
 .search-bar {
   position: relative;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .search-bar input {
-  width: 100%;
+  flex: 1;
   padding: 0.6rem 1rem;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 25px;
@@ -216,6 +228,23 @@ if (typeof window !== 'undefined') {
   border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.15);
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.search-submit:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+.search-submit {
+  padding: 0.6rem 0.9rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 600;
 }
 
 .nav-links {
