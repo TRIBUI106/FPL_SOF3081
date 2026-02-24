@@ -3,22 +3,38 @@
     <!-- Search Header -->
     <div class="search-header">
       <div class="search-container">
+        <h1 class="search-title">Khám phá nội dung</h1>
         <div class="search-box">
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="🔍 Tìm kiếm bài viết, tag, tác giả..."
-            class="search-input"
+            placeholder="Tìm kiếm bài viết, tag, tác giả..."
+            class="input search-input"
             @keyup.enter="performSearch"
           />
-          <button @click="performSearch" class="search-btn">🔍 Tìm kiếm</button>
+          <button @click="performSearch" class="btn btn-primary search-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-sm"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Tìm kiếm
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Filters -->
     <div class="filters-section">
-      <h3>🎯 Bộ lọc</h3>
+      <h3 class="filter-header">Bộ lọc</h3>
       <div class="filter-group">
         <label class="filter-label">Danh mục</label>
         <div class="filter-options">
@@ -27,7 +43,11 @@
             :key="category"
             class="filter-btn"
             :class="{ active: selectedCategory === category }"
-            @click="selectedCategory === category ? selectedCategory = '' : selectedCategory = category"
+            @click="
+              selectedCategory === category
+                ? (selectedCategory = '')
+                : (selectedCategory = category)
+            "
           >
             {{ category }}
           </button>
@@ -48,37 +68,67 @@
     <div class="results-section">
       <div v-if="searchPerformed" class="results-info">
         <h2 v-if="filteredPosts.length > 0">
-          📊 Tìm thấy {{ filteredPosts.length }} kết quả
-          <span v-if="searchQuery" class="search-term">cho "{{ searchQuery }}"</span>
+          Tìm thấy {{ filteredPosts.length }} kết quả
+          <span v-if="searchQuery" class="search-term"
+            >cho "{{ searchQuery }}"</span
+          >
         </h2>
-        <h2 v-else>😢 Không tìm thấy kết quả nào</h2>
+        <h2 v-else>Không tìm thấy kết quả nào</h2>
       </div>
 
       <!-- Results Grid -->
       <div class="results-grid">
-        <article v-for="post in filteredPosts" :key="post.id" class="result-card">
+        <article
+          v-for="post in filteredPosts"
+          :key="post.id"
+          class="result-card"
+        >
           <div class="result-image">
             <img :src="post.image" :alt="post.title" />
           </div>
           <div class="result-content">
             <div class="result-category">{{ post.category }}</div>
             <h3 class="result-title">{{ post.title }}</h3>
-            <p class="result-excerpt">{{ post.content.substring(0, 120) }}...</p>
+            <p class="result-excerpt">
+              {{ post.content.substring(0, 120) }}...
+            </p>
             <div class="result-meta">
-              <span class="meta-item">📅 {{ formatDate(post.date) }}</span>
-              <span class="meta-item">⏱️ {{ estimateReadTime(post.content) }} phút đọc</span>
+              <span class="meta-item">{{ formatDate(post.date) }}</span>
+              <span class="meta-item"
+                >{{ estimateReadTime(post.content) }} phút đọc</span
+              >
             </div>
             <div class="result-tags">
-              <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+              <span v-for="tag in post.tags" :key="tag" class="tag">{{
+                tag
+              }}</span>
             </div>
-            <router-link :to="`/post/${post.id}`" class="read-btn">Đọc tiếp →</router-link>
+            <router-link :to="`/post/${post.id}`" class="read-btn"
+              >Đọc tiếp →</router-link
+            >
           </div>
         </article>
       </div>
 
       <!-- Empty State -->
       <div v-if="!searchPerformed" class="empty-state">
-        <div class="empty-icon">🔍</div>
+        <div class="empty-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="icon-empty"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
         <h3>Bắt đầu tìm kiếm</h3>
         <p>Nhập từ khóa để tìm các bài viết bạn quan tâm</p>
       </div>
@@ -87,69 +137,75 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const searchPerformed = ref(false);
-const selectedCategory = ref('');
-const sortBy = ref('recent');
+const selectedCategory = ref("");
+const sortBy = ref("recent");
 
-const categories = ['Vue.js', 'CSS', 'JavaScript', 'Web Design', 'Backend'];
+const categories = ["Vue.js", "CSS", "JavaScript", "Web Design", "Backend"];
 
 const allPosts = ref([
   {
     id: 1,
-    title: 'Bắt đầu với Vue.js',
-    content: 'Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời.',
-    category: 'Vue.js',
-    tags: ['Vue.js', 'JavaScript', 'Frontend', 'Tutorial'],
+    title: "Bắt đầu với Vue.js",
+    content:
+      "Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời.",
+    category: "Vue.js",
+    tags: ["Vue.js", "JavaScript", "Frontend", "Tutorial"],
     date: new Date(),
-    image: 'https://picsum.photos/400/250?random=1'
+    image: "https://picsum.photos/400/250?random=1",
   },
   {
     id: 2,
-    title: 'Các Best Practices trong Vue.js',
-    content: 'Những thực hành tốt nhất sẽ giúp bạn viết mã sạch hơn, dễ bảo trì và có hiệu suất tốt hơn.',
-    category: 'Vue.js',
-    tags: ['Vue.js', 'Best Practices', 'Code Quality'],
+    title: "Các Best Practices trong Vue.js",
+    content:
+      "Những thực hành tốt nhất sẽ giúp bạn viết mã sạch hơn, dễ bảo trì và có hiệu suất tốt hơn.",
+    category: "Vue.js",
+    tags: ["Vue.js", "Best Practices", "Code Quality"],
     date: new Date(Date.now() - 86400000),
-    image: 'https://picsum.photos/400/250?random=2'
+    image: "https://picsum.photos/400/250?random=2",
   },
   {
     id: 3,
-    title: 'CSS Grid vs Flexbox',
-    content: 'So sánh chi tiết giữa CSS Grid và Flexbox để tìm ra giải pháp phù hợp cho dự án của bạn.',
-    category: 'CSS',
-    tags: ['CSS', 'Layout', 'Web Design'],
+    title: "CSS Grid vs Flexbox",
+    content:
+      "So sánh chi tiết giữa CSS Grid và Flexbox để tìm ra giải pháp phù hợp cho dự án của bạn.",
+    category: "CSS",
+    tags: ["CSS", "Layout", "Web Design"],
     date: new Date(Date.now() - 172800000),
-    image: 'https://picsum.photos/400/250?random=3'
+    image: "https://picsum.photos/400/250?random=3",
   },
   {
     id: 4,
-    title: 'JavaScript ES6: Những tính năng phải biết',
-    content: 'Khám phá những tính năng mới của ES6 như arrow function, const/let, classes và template literals.',
-    category: 'JavaScript',
-    tags: ['JavaScript', 'ES6', 'Programming'],
+    title: "JavaScript ES6: Những tính năng phải biết",
+    content:
+      "Khám phá những tính năng mới của ES6 như arrow function, const/let, classes và template literals.",
+    category: "JavaScript",
+    tags: ["JavaScript", "ES6", "Programming"],
     date: new Date(Date.now() - 259200000),
-    image: 'https://picsum.photos/400/250?random=4'
+    image: "https://picsum.photos/400/250?random=4",
   },
   {
     id: 5,
-    title: 'Thiết kế responsive: Hướng dẫn hoàn chỉnh',
-    content: 'Học cách thiết kế website mà hoạt động tốt trên tất cả các thiết bị, từ mobile đến desktop.',
-    category: 'Web Design',
-    tags: ['Web Design', 'Responsive', 'Mobile-First'],
+    title: "Thiết kế responsive: Hướng dẫn hoàn chỉnh",
+    content:
+      "Học cách thiết kế website mà hoạt động tốt trên tất cả các thiết bị, từ mobile đến desktop.",
+    category: "Web Design",
+    tags: ["Web Design", "Responsive", "Mobile-First"],
     date: new Date(Date.now() - 345600000),
-    image: 'https://picsum.photos/400/250?random=5'
+    image: "https://picsum.photos/400/250?random=5",
   },
   {
     id: 6,
-    title: 'Node.js và Express.js cho người mới bắt đầu',
-    content: 'Hướng dẫn từng bước để tạo server backend với Node.js và Express.js.',
-    category: 'Backend',
-    tags: ['Node.js', 'Express.js', 'Backend', 'JavaScript'],
+    title: "Node.js và Express.js cho người mới bắt đầu",
+    content:
+      "Hướng dẫn từng bước để tạo server backend với Node.js và Express.js.",
+    category: "Backend",
+    tags: ["Node.js", "Express.js", "Backend", "JavaScript"],
     date: new Date(Date.now() - 432000000),
-    image: 'https://picsum.photos/400/250?random=6'
+    image: "https://picsum.photos/400/250?random=6",
   },
 ]);
 
@@ -159,22 +215,25 @@ const filteredPosts = computed(() => {
   // Filter by search query
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    results = results.filter(post =>
-      post.title.toLowerCase().includes(query) ||
-      post.content.toLowerCase().includes(query) ||
-      post.tags.some(tag => tag.toLowerCase().includes(query))
+    results = results.filter(
+      (post) =>
+        post.title.toLowerCase().includes(query) ||
+        post.content.toLowerCase().includes(query) ||
+        post.tags.some((tag) => tag.toLowerCase().includes(query)),
     );
   }
 
   // Filter by category
   if (selectedCategory.value) {
-    results = results.filter(post => post.category === selectedCategory.value);
+    results = results.filter(
+      (post) => post.category === selectedCategory.value,
+    );
   }
 
   // Sort
-  if (sortBy.value === 'popular') {
+  if (sortBy.value === "popular") {
     results = [...results].sort(() => Math.random() - 0.5); // Simulated popularity
-  } else if (sortBy.value === 'oldest') {
+  } else if (sortBy.value === "oldest") {
     results = [...results].sort((a, b) => new Date(a.date) - new Date(b.date));
   } else {
     results = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -184,10 +243,10 @@ const filteredPosts = computed(() => {
 });
 
 const formatDate = (date) => {
-  return new Intl.DateTimeFormat('vi-VN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return new Intl.DateTimeFormat("vi-VN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   }).format(date || new Date());
 };
 
@@ -202,397 +261,228 @@ const performSearch = () => {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
 .search-wrapper {
-  min-height: calc(100vh - 80px);
-  background: #f5f7fa;
-}
-
-/* Search Header */
-.search-header {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white;
-  padding: 3rem 1rem;
-  text-align: center;
-}
-
-.search-container {
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.search-header {
+  margin-bottom: 64px;
+}
+
+.search-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--color-text);
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
 }
 
 .search-box {
   display: flex;
-  gap: 0.5rem;
-  animation: slideDown 0.5s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  gap: 16px;
 }
 
 .search-input {
   flex: 1;
-  padding: 1rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 .search-btn {
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  color: white;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
 }
 
-.search-btn:hover {
-  background: white;
-  color: #1e3c72;
-  transform: translateY(-2px);
-}
-
-/* Filters Section */
 .filters-section {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 64px;
+  padding: 32px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid var(--border);
 }
 
-.filters-section h3 {
-  margin-top: 0;
-  color: #1e3c72;
-  font-size: 1.1rem;
+.filter-header {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
 }
 
 .filter-group {
-  margin-bottom: 1.5rem;
-}
-
-.filter-group:last-child {
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .filter-label {
-  display: block;
-  font-weight: 600;
-  color: #1e3c72;
-  margin-bottom: 0.75rem;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
 }
 
 .filter-options {
   display: flex;
-  gap: 0.75rem;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .filter-btn {
-  padding: 0.6rem 1.2rem;
-  border: 2px solid #e0e0e0;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
   background: white;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
-  color: #333;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 .filter-btn:hover {
-  border-color: #2a5298;
-  color: #2a5298;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+  background: var(--color-primary);
   color: white;
-  border-color: transparent;
+  border-color: var(--color-primary);
 }
 
 .filter-select {
-  padding: 0.6rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  background: white;
-  transition: border-color 0.3s ease;
-  font-family: inherit;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #2a5298;
-}
-
-/* Results Section */
-.results-section {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 1rem 2rem;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-weight: 700;
+  max-width: 200px;
 }
 
 .results-info {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 32px;
 }
 
 .results-info h2 {
-  margin: 0;
-  color: #1e3c72;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
-.search-term {
-  color: #2a5298;
-  font-weight: 700;
-}
-
-/* Results Grid */
 .results-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 32px;
 }
 
 .result-card {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 320px 1fr;
+  gap: 32px;
   background: white;
-  border-radius: 12px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  transition: var(--transition);
 }
 
 .result-card:hover {
+  box-shadow: var(--shadow-lg);
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-.result-image {
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
 }
 
 .result-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.result-card:hover .result-image img {
-  transform: scale(1.1);
 }
 
 .result-content {
-  padding: 1.5rem;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .result-category {
-  display: inline-block;
-  padding: 0.4rem 0.8rem;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-  color: white;
-  border-radius: 12px;
   font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  width: fit-content;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 12px;
 }
 
 .result-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #1e3c72;
-  margin: 0 0 0.75rem 0;
-  line-height: 1.4;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 16px;
+  line-height: 1.2;
 }
 
 .result-excerpt {
-  color: #666;
-  font-size: 0.95rem;
-  margin: 0 0 1rem 0;
+  color: #64748b;
   line-height: 1.6;
+  margin-bottom: 24px;
 }
 
 .result-meta {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.meta-item {
-  font-size: 0.85rem;
-  color: #999;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin-bottom: 24px;
 }
 
 .result-tags {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .tag {
-  display: inline-block;
-  padding: 0.3rem 0.7rem;
-  background: #f0f4fa;
-  color: #2a5298;
-  border-radius: 12px;
+  padding: 4px 10px;
+  background: var(--color-background);
+  color: var(--color-primary);
+  border-radius: 6px;
   font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid #2a5298;
+  font-weight: 700;
 }
 
 .read-btn {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-  color: white;
-  border-radius: 8px;
+  font-weight: 800;
+  color: var(--color-primary);
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  width: fit-content;
-  transition: all 0.3s ease;
+  margin-top: auto;
 }
 
-.read-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(42, 82, 152, 0.3);
-}
-
-/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 80px 0;
 }
 
-.empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.icon-empty {
+  color: #cbd5e1;
+  margin-bottom: 24px;
 }
 
 .empty-state h3 {
-  color: #1e3c72;
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
 .empty-state p {
-  color: #999;
-  margin: 0;
+  color: #64748b;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .result-card {
     grid-template-columns: 1fr;
   }
-
   .result-image {
-    height: 200px;
+    height: 240px;
   }
-
   .search-box {
     flex-direction: column;
-  }
-
-  .search-btn {
-    width: 100%;
-  }
-
-  .filter-options {
-    gap: 0.5rem;
-  }
-
-  .filter-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
-
-  .result-meta {
-    gap: 1rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .search-header {
-    padding: 2rem 1rem;
-  }
-
-  .search-input {
-    font-size: 0.95rem;
-  }
-
-  .filters-section {
-    padding: 1rem;
-  }
-
-  .result-title {
-    font-size: 1.1rem;
-  }
-
-  .result-content {
-    padding: 1rem;
-  }
-
-  .result-tags {
-    margin-bottom: 0.75rem;
-  }
-
-  .result-meta {
-    flex-wrap: wrap;
-    gap: 0.75rem;
   }
 }
 </style>

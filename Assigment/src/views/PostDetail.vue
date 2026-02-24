@@ -2,9 +2,9 @@
   <div v-if="post" class="post-wrapper">
     <!-- Breadcrumb Navigation -->
     <div class="breadcrumb">
-      <router-link to="/" class="breadcrumb-link">🏠 Trang chủ</router-link>
+      <router-link to="/" class="breadcrumb-link">Trang chủ</router-link>
       <span class="breadcrumb-sep">/</span>
-      <router-link to="/" class="breadcrumb-link">📰 Bài viết</router-link>
+      <router-link to="/" class="breadcrumb-link">Bài viết</router-link>
       <span class="breadcrumb-sep">/</span>
       <span class="breadcrumb-active">{{ post.title }}</span>
     </div>
@@ -13,21 +13,71 @@
     <div class="post-header">
       <div class="post-category-badge">{{ post.category }}</div>
       <h1 class="post-title">{{ post.title }}</h1>
-      
+
       <div class="post-meta-section">
         <div class="author-info">
           <img :src="authorAvatar" :alt="post.author" class="author-avatar" />
           <div class="author-details">
-            <p class="author-name">👤 {{ post.author }}</p>
-            <p class="post-date">📅 {{ formatDate(post.date) }} • ⏱️ {{ estimateReadTime() }} phút đọc</p>
+            <p class="author-name">{{ post.author }}</p>
+            <p class="post-date">
+              {{ formatDate(post.date) }} • {{ estimateReadTime() }} phút đọc
+            </p>
           </div>
         </div>
         <div class="post-actions">
-          <button class="action-btn" @click="toggleBookmark" :class="{ active: isBookmarked }">
-            {{ isBookmarked ? '❤️' : '🤍' }} Lưu
+          <button
+            class="action-btn"
+            @click="toggleBookmark"
+            :class="{ active: isBookmarked }"
+          >
+            <svg
+              v-if="!isBookmarked"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-sm"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-sm"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+            Lưu
           </button>
           <button class="action-btn" @click="showShareMenu = !showShareMenu">
-            📤 Chia sẻ
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-sm"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            Chia sẻ
           </button>
         </div>
       </div>
@@ -37,13 +87,21 @@
         <button class="share-btn facebook-btn">Facebook</button>
         <button class="share-btn twitter-btn">Twitter</button>
         <button class="share-btn linkedin-btn">LinkedIn</button>
-        <button class="share-btn copy-btn" @click="copyToClipboard">📋 Sao chép liên kết</button>
+        <button class="share-btn copy-btn" @click="copyToClipboard">
+          Sao chép liên kết
+        </button>
       </div>
     </div>
 
     <!-- Featured Image -->
     <div class="post-image-wrapper">
-      <img v-if="post.image" :src="post.image" :alt="post.title" class="post-image" loading="lazy" />
+      <img
+        v-if="post.image"
+        :src="post.image"
+        :alt="post.title"
+        class="post-image"
+        loading="lazy"
+      />
     </div>
 
     <!-- Post Content -->
@@ -60,16 +118,22 @@
 
     <!-- Related Posts -->
     <section class="related-posts" v-if="relatedPosts.length > 0">
-      <h2 class="section-title">📚 Bài viết liên quan</h2>
+      <h2 class="section-title">Bài viết liên quan</h2>
       <div class="related-posts-grid">
-        <article v-for="relatedPost in relatedPosts" :key="relatedPost.id" class="related-post-card">
+        <article
+          v-for="relatedPost in relatedPosts"
+          :key="relatedPost.id"
+          class="related-post-card"
+        >
           <div class="related-post-image">
             <img :src="relatedPost.image" :alt="relatedPost.title" />
           </div>
           <div class="related-post-content">
             <h4>{{ relatedPost.title }}</h4>
             <p class="related-post-date">{{ formatDate(relatedPost.date) }}</p>
-            <router-link :to="`/post/${relatedPost.id}`" class="read-more">Đọc tiếp →</router-link>
+            <router-link :to="`/post/${relatedPost.id}`" class="read-more"
+              >Đọc tiếp →</router-link
+            >
           </div>
         </article>
       </div>
@@ -77,14 +141,10 @@
 
     <!-- Comments Section -->
     <section class="comments-section">
-      <h2 class="section-title">💬 Bình luận ({{ comments.length }})</h2>
+      <h2 class="section-title">Bình luận ({{ comments.length }})</h2>
 
       <!-- Comment Form -->
       <div v-if="isLoggedIn" class="comment-form">
-        <div class="comment-form-header">
-          <img :src="currentUserAvatar" :alt="currentUserName" class="form-avatar" />
-          <span class="form-user-name">{{ currentUserName }}</span>
-        </div>
         <textarea
           v-model="newComment"
           placeholder="Viết bình luận của bạn..."
@@ -92,20 +152,35 @@
           class="comment-textarea"
         ></textarea>
         <div class="comment-form-actions">
-          <button @click="addComment" class="btn-submit" :disabled="!newComment.trim()">
-            💬 Gửi bình luận
+          <button
+            @click="addComment"
+            class="btn btn-primary"
+            :disabled="!newComment.trim()"
+          >
+            Gửi bình luận
           </button>
         </div>
       </div>
       <div v-else class="login-prompt">
-        <p>👤 Vui lòng <router-link to="/login" class="text-link">đăng nhập</router-link> để viết bình luận</p>
+        <p>
+          Vui lòng
+          <router-link to="/login" class="text-link">đăng nhập</router-link> để
+          viết bình luận
+        </p>
       </div>
 
       <!-- Comments List -->
       <div class="comments-list">
-        <article v-for="(comment, index) in comments" :key="index" class="comment-card">
+        <article
+          v-for="(comment, index) in comments"
+          :key="index"
+          class="comment-card"
+        >
           <div class="comment-avatar">
-            <img :src="`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.username}`" :alt="comment.username" />
+            <img
+              :src="`https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.username}`"
+              :alt="comment.username"
+            />
           </div>
           <div class="comment-body">
             <div class="comment-header">
@@ -114,8 +189,8 @@
             </div>
             <p class="comment-text">{{ comment.text }}</p>
             <div class="comment-actions">
-              <button class="comment-action">👍 Thích</button>
-              <button class="comment-action">💬 Trả lời</button>
+              <button class="comment-action">Thích</button>
+              <button class="comment-action">Trả lời</button>
             </div>
           </div>
         </article>
@@ -123,80 +198,83 @@
     </section>
   </div>
   <div v-else class="not-found">
-    <h2>📄 Không tìm thấy bài viết</h2>
+    <h2>Không tìm thấy bài viết</h2>
     <p>Bài viết bạn tìm kiếm không tồn tại.</p>
-    <router-link to="/" class="btn-back">← Quay lại trang chủ</router-link>
+    <router-link to="/" class="btn btn-primary">Quay lại trang chủ</router-link>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 const post = ref(null);
-const newComment = ref('');
-const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
+const newComment = ref("");
+const isLoggedIn = ref(localStorage.getItem("isLoggedIn") === "true");
 const isBookmarked = ref(false);
 const showShareMenu = ref(false);
 
 const currentUserName = computed(() => {
-  const userData = JSON.parse(localStorage.getItem('userAccount') || '{}');
-  return userData.name || 'Người dùng';
+  const userData = JSON.parse(localStorage.getItem("userAccount") || "{}");
+  return userData.name || "Người dùng";
 });
 
 const currentUserAvatar = computed(() => {
-  const userData = JSON.parse(localStorage.getItem('userAccount') || '{}');
-  return userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUserName.value}`;
+  const userData = JSON.parse(localStorage.getItem("userAccount") || "{}");
+  return (
+    userData.avatar ||
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUserName.value}`
+  );
 });
 
 const authorAvatar = computed(() => {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.value?.author || 'admin'}`;
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.value?.author || "admin"}`;
 });
 
 const comments = ref([
-  { 
-    username: 'Nguyễn Văn A', 
-    time: '2 giờ trước', 
-    text: 'Bài viết rất hữu ích! Cảm ơn bạn đã chia sẻ kiến thức này. Tôi sẽ thử áp dụng ngay.' 
+  {
+    username: "Nguyễn Văn A",
+    time: "2 giờ trước",
+    text: "Bài viết rất hữu ích! Cảm ơn bạn đã chia sẻ kiến thức này. Tôi sẽ thử áp dụng ngay.",
   },
-  { 
-    username: 'Trần Thị B', 
-    time: '1 giờ trước', 
-    text: 'Có thể bạn giải thích thêm phần này được không? Tôi muốn hiểu rõ hơn.' 
+  {
+    username: "Trần Thị B",
+    time: "1 giờ trước",
+    text: "Có thể bạn giải thích thêm phần này được không? Tôi muốn hiểu rõ hơn.",
   },
 ]);
 
 const relatedPosts = ref([
   {
     id: 2,
-    title: 'Các Best Practices trong Vue.js',
-    category: 'Vue.js',
+    title: "Các Best Practices trong Vue.js",
+    category: "Vue.js",
     date: new Date(Date.now() - 86400000),
-    image: 'https://picsum.photos/400/250?random=2'
+    image: "https://picsum.photos/400/250?random=2",
   },
   {
     id: 3,
-    title: 'CSS Grid vs Flexbox: So sánh chi tiết',
-    category: 'CSS',
+    title: "CSS Grid vs Flexbox: So sánh chi tiết",
+    category: "CSS",
     date: new Date(Date.now() - 172800000),
-    image: 'https://picsum.photos/400/250?random=3'
+    image: "https://picsum.photos/400/250?random=3",
   },
   {
     id: 4,
-    title: 'JavaScript ES6: Những tính năng phải biết',
-    category: 'JavaScript',
+    title: "JavaScript ES6: Những tính năng phải biết",
+    category: "JavaScript",
     date: new Date(Date.now() - 259200000),
-    image: 'https://picsum.photos/400/250?random=4'
-  }
+    image: "https://picsum.photos/400/250?random=4",
+  },
 ]);
 
 const formatDate = (date) => {
-  return new Intl.DateTimeFormat('vi-VN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return new Intl.DateTimeFormat("vi-VN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   }).format(date || new Date());
 };
 
@@ -208,14 +286,16 @@ const estimateReadTime = () => {
 
 const toggleBookmark = () => {
   isBookmarked.value = !isBookmarked.value;
-  const message = isBookmarked.value ? '❤️ Đã lưu bài viết' : '💔 Đã bỏ lưu bài viết';
+  const message = isBookmarked.value
+    ? "❤️ Đã lưu bài viết"
+    : "💔 Đã bỏ lưu bài viết";
   console.log(message);
 };
 
 const copyToClipboard = () => {
   const url = window.location.href;
   navigator.clipboard.writeText(url).then(() => {
-    alert('📋 Đã sao chép liên kết!');
+    alert("📋 Đã sao chép liên kết!");
   });
 };
 
@@ -224,127 +304,102 @@ const addComment = () => {
 
   comments.value.unshift({
     username: currentUserName.value,
-    time: 'vừa xong',
+    time: "vừa xong",
     text: newComment.value,
   });
 
-  newComment.value = '';
+  newComment.value = "";
 };
 
 onMounted(() => {
   const postId = route.params.id;
   post.value = {
     id: postId,
-    title: 'Bắt đầu với Vue.js',
-    content: 'Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời. Trong hướng dẫn này, chúng ta sẽ khám phá những kiến thức cơ bản và xây dựng các ứng dụng tương tác.\n\nVue giúp dễ dàng tạo giao diện người dùng động và phản ứng với mã boilerplate tối thiểu. Framework này được thiết kế để có thể thích ứng dần dần, vì vậy bạn có thể sử dụng bao nhiêu hoặc bao ít tùy theo nhu cầu của mình.\n\nMột trong những lợi thế chính của Vue là cú pháp của nó đơn giản và dễ học. Nó kết hợp các khái niệm tốt nhất từ React và Angular trong khi vẫn duy trì tính độc lập của nó.',
-    category: 'Vue.js',
-    tags: ['Vue.js', 'JavaScript', 'Frontend', 'Tutorial'],
+    title: "Bắt đầu với Vue.js",
+    content:
+      "Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời. Trong hướng dẫn này, chúng ta sẽ khám phá những kiến thức cơ bản và xây dựng các ứng dụng tương tác.\n\nVue giúp dễ dàng tạo giao diện người dùng động và phản ứng với mã boilerplate tối thiểu. Framework này được thiết kế để có thể thích ứng dần dần, vì vậy bạn có thể sử dụng bao nhiêu hoặc bao ít tùy theo nhu cầu của mình.\n\nMột trong những lợi thế chính của Vue là cú pháp của nó đơn giản và dễ học. Nó kết hợp các khái niệm tốt nhất từ React và Angular trong khi vẫn duy trì tính độc lập của nó.",
+    category: "Vue.js",
+    tags: ["Vue.js", "JavaScript", "Frontend", "Tutorial"],
     image: `https://picsum.photos/800/400?random=${postId}`,
     date: new Date(),
-    author: 'Nguyen Admin',
+    author: "Nguyen Admin",
   };
 });
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
 .post-wrapper {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem 1rem;
-  animation: fadeIn 0.5s ease;
+  padding: 40px 24px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Breadcrumb */
 .breadcrumb {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  font-size: 0.9rem;
-  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .breadcrumb-link {
-  color: #2a5298;
+  color: #64748b;
   text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
+  transition: var(--transition);
 }
 
 .breadcrumb-link:hover {
-  color: #1e3c72;
-  text-decoration: underline;
+  color: var(--color-primary);
 }
 
 .breadcrumb-sep {
-  color: #ccc;
-  margin: 0 0.25rem;
+  color: #cbd5e1;
 }
 
 .breadcrumb-active {
-  color: #666;
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--color-text);
 }
 
-/* Post Header */
 .post-header {
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
 }
 
 .post-category-badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+  padding: 6px 16px;
+  background: var(--color-primary);
   color: white;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-  letter-spacing: 0.5px;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
 }
 
 .post-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #1e3c72;
-  margin: 0 0 1.5rem 0;
-  line-height: 1.3;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
 }
 
 .post-meta-section {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  gap: 24px;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 12px;
 }
 
 .author-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .author-avatar {
@@ -352,462 +407,211 @@ onMounted(() => {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #2a5298;
-}
-
-.author-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
 }
 
 .author-name {
-  font-weight: 700;
-  color: #1e3c72;
-  margin: 0;
-  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text);
 }
 
 .post-date {
-  color: #999;
-  font-size: 0.85rem;
-  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 4px;
 }
 
 .post-actions {
   display: flex;
-  gap: 1rem;
+  gap: 8px;
 }
 
 .action-btn {
-  padding: 0.6rem 1.2rem;
-  border: 2px solid #e0e0e0;
-  background: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  color: #333;
-}
-
-.action-btn:hover,
-.action-btn.active {
-  border-color: #2a5298;
-  background: #f0f4fa;
-  color: #2a5298;
-  transform: translateY(-2px);
-}
-
-/* Share Menu */
-.share-menu {
   display: flex;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.share-btn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  color: white;
-}
-
-.facebook-btn {
-  background: #1877f2;
-}
-
-.facebook-btn:hover {
-  background: #0a66c2;
-}
-
-.twitter-btn {
-  background: #1da1f2;
-}
-
-.twitter-btn:hover {
-  background: #1a8cd8;
-}
-
-.linkedin-btn {
-  background: #0077b5;
-}
-
-.linkedin-btn:hover {
-  background: #00669c;
-}
-
-.copy-btn {
-  background: #6c757d;
-}
-
-.copy-btn:hover {
-  background: #5a6268;
-}
-
-/* Post Image */
-.post-image-wrapper {
-  margin-bottom: 3rem;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid var(--border);
   border-radius: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.action-btn:hover {
+  background: #f8fafc;
+  border-color: var(--color-primary);
+}
+
+.icon-sm {
+  width: 18px;
+  height: 18px;
+}
+
+.post-image-wrapper {
+  margin-bottom: 48px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .post-image {
   width: 100%;
-  height: 400px;
+  aspect-ratio: 16/9;
   object-fit: cover;
-  display: block;
 }
 
-/* Post Content */
 .post-content {
-  margin-bottom: 3rem;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--color-text);
 }
 
-.content-text {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: #333;
-  margin-bottom: 2rem;
+.post-content p {
+  margin-bottom: 32px;
 }
 
-.content-text p {
-  margin-bottom: 1.5rem;
-  white-space: pre-line;
-}
-
-.content-text p:last-child {
-  margin-bottom: 0;
-}
-
-/* Tags */
 .post-tags {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  padding-top: 2rem;
-  border-top: 2px solid #e0e0e0;
+  gap: 8px;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
 }
 
 .tag {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background: #f0f4fa;
-  border: 1px solid #2a5298;
-  color: #2a5298;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.tag:hover {
-  background: #2a5298;
-  color: white;
-}
-
-/* Related Posts Section */
-.related-posts {
-  margin: 3rem 0;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
-  border-radius: 12px;
-}
-
-.section-title {
-  font-size: 1.4rem;
+  padding: 6px 12px;
+  background: var(--color-background);
+  color: var(--color-primary);
+  border-radius: 8px;
   font-weight: 700;
-  color: #1e3c72;
-  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.related-posts {
+  margin-top: 80px;
+  padding: 48px;
+  background: white;
+  border-radius: 24px;
+  border: 1px solid var(--border);
 }
 
 .related-posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  gap: 24px;
+  margin-top: 32px;
 }
 
 .related-post-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.related-post-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-.related-post-image {
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
 }
 
 .related-post-image img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 3/2;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.related-post-card:hover .related-post-image img {
-  transform: scale(1.1);
-}
-
-.related-post-content {
-  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
 .related-post-content h4 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #1e3c72;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.4;
+  font-size: 1.125rem;
+  font-weight: 800;
+  margin-bottom: 8px;
 }
 
-.related-post-date {
-  font-size: 0.8rem;
-  color: #999;
-  margin: 0 0 0.75rem 0;
-}
-
-.read-more {
-  color: #2a5298;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: color 0.3s ease;
-}
-
-.read-more:hover {
-  color: #1e3c72;
-}
-
-/* Comments Section */
 .comments-section {
-  margin-top: 3rem;
-  padding-top: 3rem;
-  border-top: 2px solid #e0e0e0;
+  margin-top: 80px;
 }
 
-/* Comment Form */
 .comment-form {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  transition: border-color 0.3s ease;
-}
-
-.comment-form:focus-within {
-  border-color: #2a5298;
-  box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
-}
-
-.comment-form-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.form-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.form-user-name {
-  font-weight: 600;
-  color: #1e3c72;
-  font-size: 0.9rem;
+  margin-bottom: 48px;
 }
 
 .comment-textarea {
   width: 100%;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 1rem;
-  resize: vertical;
-  min-height: 100px;
-  margin-bottom: 1rem;
-  transition: border-color 0.3s ease;
+  padding: 24px;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  margin-bottom: 16px;
 }
 
 .comment-textarea:focus {
+  background: white;
+  border-color: var(--color-primary);
   outline: none;
-  border-color: #2a5298;
-  box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
 }
 
-.comment-textarea::placeholder {
-  color: #999;
-}
-
-.comment-form-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-submit {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(42, 82, 152, 0.3);
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Login Prompt */
-.login-prompt {
-  background: #e3f2fd;
-  border: 1px solid #bbdefb;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.login-prompt p {
-  margin: 0;
-  color: #1e3c72;
-}
-
-.text-link {
-  color: #2a5298;
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.3s ease;
-}
-
-.text-link:hover {
-  color: #1e3c72;
-  text-decoration: underline;
-}
-
-/* Comments List */
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .comment-card {
   display: flex;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.comment-card:hover {
-  background: #f0f4fa;
-}
-
-.comment-avatar {
-  flex-shrink: 0;
+  gap: 20px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
 }
 
 .comment-avatar img {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  object-fit: cover;
-}
-
-.comment-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.comment-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .comment-author {
-  font-weight: 700;
-  color: #1e3c72;
-  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-right: 12px;
 }
 
 .comment-time {
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 0.875rem;
+  color: #64748b;
 }
 
 .comment-text {
-  color: #333;
-  font-size: 0.95rem;
+  margin-top: 8px;
   line-height: 1.6;
-  margin: 0 0 0.75rem 0;
 }
 
 .comment-actions {
   display: flex;
-  gap: 1rem;
+  gap: 16px;
+  margin-top: 12px;
 }
 
 .comment-action {
-  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-primary);
   background: none;
   border: none;
-  color: #666;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: color 0.3s ease;
 }
 
-.comment-action:hover {
-  color: #2a5298;
+@media (max-width: 640px) {
+  .post-wrapper {
+    padding: 24px 16px;
+  }
+  .post-meta-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .related-posts {
+    padding: 24px;
+  }
 }
-
 /* Not Found */
 .not-found {
   max-width: 800px;
