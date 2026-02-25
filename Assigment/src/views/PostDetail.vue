@@ -205,8 +205,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { posts } from "../data/posts.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -246,29 +247,12 @@ const comments = ref([
   },
 ]);
 
-const relatedPosts = ref([
-  {
-    id: 2,
-    title: "Các Best Practices trong Vue.js",
-    category: "Vue.js",
-    date: new Date(Date.now() - 86400000),
-    image: "https://picsum.photos/400/250?random=2",
-  },
-  {
-    id: 3,
-    title: "CSS Grid vs Flexbox: So sánh chi tiết",
-    category: "CSS",
-    date: new Date(Date.now() - 172800000),
-    image: "https://picsum.photos/400/250?random=3",
-  },
-  {
-    id: 4,
-    title: "JavaScript ES6: Những tính năng phải biết",
-    category: "JavaScript",
-    date: new Date(Date.now() - 259200000),
-    image: "https://picsum.photos/400/250?random=4",
-  },
-]);
+const relatedPosts = computed(() => {
+  if (!post.value) return [];
+  return posts.filter(
+    (p) => p.category === post.value.category && p.id !== post.value.id
+  );
+});
 
 const formatDate = (date) => {
   return new Intl.DateTimeFormat("vi-VN", {
@@ -281,15 +265,11 @@ const formatDate = (date) => {
 const estimateReadTime = () => {
   if (!post.value) return 0;
   const wordCount = post.value.content.split(/\s+/).length;
-  return Math.ceil(wordCount / 200); // Average reading speed: 200 words per minute
+  return Math.max(1, Math.ceil(wordCount / 200)); // Average reading speed: 200 words per minute
 };
 
 const toggleBookmark = () => {
   isBookmarked.value = !isBookmarked.value;
-  const message = isBookmarked.value
-    ? "❤️ Đã lưu bài viết"
-    : "💔 Đã bỏ lưu bài viết";
-  console.log(message);
 };
 
 const copyToClipboard = () => {
@@ -311,20 +291,19 @@ const addComment = () => {
   newComment.value = "";
 };
 
-onMounted(() => {
-  const postId = route.params.id;
-  post.value = {
-    id: postId,
-    title: "Bắt đầu với Vue.js",
-    content:
-      "Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời. Trong hướng dẫn này, chúng ta sẽ khám phá những kiến thức cơ bản và xây dựng các ứng dụng tương tác.\n\nVue giúp dễ dàng tạo giao diện người dùng động và phản ứng với mã boilerplate tối thiểu. Framework này được thiết kế để có thể thích ứng dần dần, vì vậy bạn có thể sử dụng bao nhiêu hoặc bao ít tùy theo nhu cầu của mình.\n\nMột trong những lợi thế chính của Vue là cú pháp của nó đơn giản và dễ học. Nó kết hợp các khái niệm tốt nhất từ React và Angular trong khi vẫn duy trì tính độc lập của nó.",
-    category: "Vue.js",
-    tags: ["Vue.js", "JavaScript", "Frontend", "Tutorial"],
-    image: `https://picsum.photos/800/400?random=${postId}`,
-    date: new Date(),
-    author: "Nguyen Admin",
-  };
-});
+const loadPost = () => {
+  const postId = parseInt(route.params.id);
+  const foundPost = posts.find((p) => p.id === postId);
+  if (foundPost) {
+    post.value = foundPost;
+    window.scrollTo(0, 0);
+  } else {
+    post.value = null;
+  }
+};
+
+onMounted(loadPost);
+watch(() => route.params.id, loadPost);
 </script>
 
 <style scoped>

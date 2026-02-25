@@ -40,7 +40,7 @@
     <section class="stats-section">
       <div class="container">
         <div class="stat-item">
-          <div class="stat-number">{{ posts.length }}+</div>
+          <div class="stat-number">{{ allPosts.length }}+</div>
           <div class="stat-label">Bài viết</div>
         </div>
         <div class="stat-item">
@@ -63,68 +63,36 @@
       <div class="container">
         <h2 class="section-title">Bài viết mới nhất</h2>
         <div v-if="filteredPosts.length > 0" class="row cols-3">
-          <article
+          <router-link
             v-for="post in filteredPosts"
             :key="post.id"
-            class="card post-card"
+            :to="`/post/${post.id}`"
+            class="post-card-link"
           >
-            <div class="card-image">
-              <img :src="post.image" :alt="post.title" loading="lazy" />
-              <span class="badge badge-primary">{{ post.category }}</span>
-            </div>
-            <div class="card-body">
-              <h3 class="post-title">{{ post.title }}</h3>
-              <p class="post-excerpt">{{ post.content }}</p>
-              <footer class="post-footer">
-                <div class="post-meta">
-                  <span class="post-date">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="4"
-                        width="18"
-                        height="18"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    {{ formatDate(post.date) }}
-                  </span>
-                  <span class="reading-time">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    {{ estimateReadTime(post.content) }} phút
-                  </span>
-                </div>
-                <router-link :to="`/post/${post.id}`" class="read-link"
-                  >Đọc tiếp →</router-link
-                >
-              </footer>
-            </div>
-          </article>
+            <article class="card post-card">
+              <div class="card-image">
+                <img :src="post.image" :alt="post.title" loading="lazy" />
+                <span class="badge badge-primary">{{ post.category }}</span>
+              </div>
+              <div class="card-body">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <p class="post-excerpt">{{ post.content.substring(0, 150) }}...</p>
+                <footer class="post-footer">
+                  <div class="post-meta">
+                    <span class="post-date">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      {{ formatDate(post.date) }}
+                    </span>
+                    <span class="reading-time">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      {{ estimateReadTime(post.content) }} phút
+                    </span>
+                  </div>
+                  <span class="read-link">Đọc tiếp →</span>
+                </footer>
+              </div>
+            </article>
+          </router-link>
         </div>
         <div v-else class="no-posts">
           <div class="empty-state">
@@ -167,7 +135,10 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { posts } from "../data/posts.js";
 
+const router = useRouter();
 const selectedCategory = ref("");
 const emailNewsletter = ref("");
 const newsletterMessage = ref("");
@@ -175,67 +146,13 @@ const newsletterStatus = ref("");
 
 const categories = ["Vue.js", "CSS", "JavaScript", "Web Design", "Backend"];
 
-const posts = ref([
-  {
-    id: 1,
-    title: "Học Vue.js từ cơ bản đến nâng cao",
-    content:
-      "Hướng dẫn chi tiết về Template Syntax, Data Binding và Reactivity dành cho người mới bắt đầu học Vue.js",
-    category: "Vue.js",
-    date: new Date("2026-01-23"),
-    image: new URL("../img/Image.jpeg", import.meta.url).href,
-  },
-  {
-    id: 2,
-    title: "Thành thạo CSS - Tạo layout responsive",
-    content:
-      "Học cách tạo các layout đẹp mắt và responsive với các kỹ thuật CSS hiện đại như Flexbox và Grid",
-    category: "CSS",
-    date: new Date("2026-01-22"),
-    image: new URL("../img/anh1.png", import.meta.url).href,
-  },
-  {
-    id: 3,
-    title: "Vue Router và Hệ thống xác thực",
-    content:
-      "Xây dựng hệ thống đăng nhập và bảo vệ các routes quan trọng trong ứng dụng Vue của bạn",
-    category: "Vue.js",
-    date: new Date("2026-01-21"),
-    image: new URL("../img/anh2.png", import.meta.url).href,
-  },
-  {
-    id: 4,
-    title: "JavaScript ES6+ Tính năng mới",
-    content:
-      "Khám phá các tính năng mới trong JavaScript ES6+ giúp viết code sạch và hiệu quả hơn",
-    category: "JavaScript",
-    date: new Date("2026-01-20"),
-    image: new URL("../img/Image.jpeg", import.meta.url).href,
-  },
-  {
-    id: 5,
-    title: "Thiết kế Web hiện đại với UX tốt",
-    content:
-      "Những nguyên tắc thiết kế web hiện đại để tạo ra trải nghiệm người dùng tuyệt vời",
-    category: "Web Design",
-    date: new Date("2026-01-19"),
-    image: new URL("../img/anh1.png", import.meta.url).href,
-  },
-  {
-    id: 6,
-    title: "Backend Development với Node.js",
-    content: "Xây dựng API backend mạnh mẽ với Node.js và Express.js",
-    category: "Backend",
-    date: new Date("2026-01-18"),
-    image: new URL("../img/anh2.png", import.meta.url).href,
-  },
-]);
+const allPosts = ref(posts);
 
 const filteredPosts = computed(() => {
   if (!selectedCategory.value) {
-    return posts.value;
+    return allPosts.value;
   }
-  return posts.value.filter((post) => post.category === selectedCategory.value);
+  return allPosts.value.filter((post) => post.category === selectedCategory.value);
 });
 
 const formatDate = (date) => {
@@ -413,10 +330,22 @@ const subscribeNewsletter = () => {
   color: var(--color-text);
 }
 
+.post-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: var(--transition);
+}
+
 .post-card {
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: var(--transition);
+}
+
+.post-card-link:hover .post-card {
+  transform: translateY(-8px);
 }
 
 .card-image {
