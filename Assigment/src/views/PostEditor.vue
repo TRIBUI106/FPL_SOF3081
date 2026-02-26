@@ -1,57 +1,74 @@
 <template>
-  <div class="editor-container">
-    <div class="container container-sm">
-      <header class="editor-header">
-        <button @click="router.back()" class="back-link">
-          ← Quay lại
+  <div class="noir-section min-vh-100">
+    <div class="container-fluid px-lg-5">
+      <header class="mb-5 pb-4 border-bottom border-brutal">
+        <button
+          @click="router.back()"
+          class="btn btn-sm btn-outline-primary mb-4 display-font lh-1 p-2"
+        >
+          <i class="bi bi-arrow-left"></i> BACK_ARCHIVE
         </button>
-        <h1 class="page-title">{{ isEdit ? 'Chỉnh sửa bài viết' : 'Tạo bài viết mới' }}</h1>
-        <p class="page-subtitle">
-          {{ isEdit ? 'Cập nhật nội dung bài viết của bạn' : 'Chia sẻ những điều thú vị với mọi người' }}
+        <div class="display-font text-acid text-small mb-2 flicker">
+          // EDITOR_NODE_ACTIVE
+        </div>
+        <h1 class="display-font text-white fs-1 mb-0">
+          {{ isEdit ? "MODIFY_ENTRY" : "GENERATE_ENTRY" }}
+        </h1>
+        <p class="display-font text-muted text-small mt-2">
+          {{
+            isEdit
+              ? "UPDATING_DATA_STREAM_CONTENT"
+              : "INITIALIZING_NEW_KNOWLEDGE_TRANSMISSION"
+          }}
         </p>
       </header>
 
-      <section class="editor-card card">
-        <PostForm 
-          :initialData="postData" 
-          :isEdit="isEdit"
-          @submit="handleSave"
-          @cancel="router.back()"
-        />
-      </section>
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="bg-surface border border-brutal p-5 shadow-brutal mb-5">
+            <PostForm
+              :initialData="postData"
+              :isEdit="isEdit"
+              @submit="handleSave"
+              @cancel="router.back()"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { getPosts, addPost, updatePost } from '../data/postStore.js';
-import { posts as defaultPosts } from '../data/posts.js';
-import PostForm from '../components/PostForm.vue';
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { getPosts, addPost, updatePost } from "../data/postStore.js";
+import { posts as defaultPosts } from "../data/posts.js";
+import PostForm from "../components/PostForm.vue";
 
 const route = useRoute();
 const router = useRouter();
 
 const isEdit = computed(() => !!route.params.id);
 const postData = ref({
-  title: '',
-  content: '',
-  category: '',
-  image: 'https://picsum.photos/800/500?random=' + Math.floor(Math.random() * 100),
-  tags: []
+  title: "",
+  content: "",
+  category: "",
+  image:
+    "https://picsum.photos/800/500?random=" + Math.floor(Math.random() * 100),
+  tags: [],
 });
 
 onMounted(() => {
   if (isEdit.value) {
     const id = parseInt(route.params.id);
     const allPosts = getPosts() || defaultPosts;
-    const post = allPosts.find(p => p.id === id);
-    
+    const post = allPosts.find((p) => p.id === id);
+
     if (post) {
       postData.value = { ...post };
     } else {
-      router.push('/my-posts');
+      router.push("/my-posts");
     }
   }
 });
@@ -60,58 +77,21 @@ const handleSave = (data) => {
   if (isEdit.value) {
     updatePost(data);
   } else {
+    // Add current user as author
+    const userData = JSON.parse(localStorage.getItem("userAccount") || "{}");
+    data.author = userData.name || "Anonymous Entity";
     addPost(data);
   }
-  router.push('/my-posts');
+  router.push("/my-posts");
 };
 </script>
 
 <style scoped>
-.editor-container {
-  padding: 60px 0;
-  background: var(--color-background);
-  min-height: 100vh;
+.text-small {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
 }
-
-.container-sm {
-  max-width: 800px;
-}
-
-.editor-header {
-  margin-bottom: 40px;
-}
-
-.back-link {
-  background: none;
-  border: none;
-  color: var(--color-primary);
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 24px;
-  display: block;
-}
-
-.page-title {
-  font-size: 2.25rem;
-  font-weight: 900;
-  margin-bottom: 8px;
-}
-
-.page-subtitle {
-  color: #64748b;
-  font-size: 1.1rem;
-}
-
-.editor-card {
-  padding: 40px;
-  background: white;
-  border-radius: 24px;
-}
-
-@media (max-width: 640px) {
-  .editor-card {
-    padding: 24px;
-  }
+.bg-surface {
+  background-color: var(--bg-surface) !important;
 }
 </style>

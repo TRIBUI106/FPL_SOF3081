@@ -1,122 +1,192 @@
 <template>
-  <div class="search-wrapper">
-    <!-- Search Header -->
-    <div class="search-header">
-      <div class="search-container">
-        <h1 class="search-title">Khám phá nội dung</h1>
-        <div class="search-box">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Tìm kiếm bài viết, tag, tác giả..."
-            class="input search-input"
-            @keyup.enter="performSearch"
-          />
-          <button @click="performSearch" class="btn btn-primary search-btn">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon-sm"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            Tìm kiếm
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="filters-section">
-      <h3 class="filter-header">Bộ lọc</h3>
-      <div class="filter-group">
-        <label class="filter-label">Danh mục</label>
-        <div class="filter-options">
-          <button
-            v-for="category in categories"
-            :key="category"
-            class="filter-btn"
-            :class="{ active: selectedCategory === category }"
-            @click="
-              selectedCategory === category
-                ? (selectedCategory = '')
-                : (selectedCategory = category)
-            "
-          >
-            {{ category }}
-          </button>
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <label class="filter-label">Sắp xếp theo</label>
-        <select v-model="sortBy" class="filter-select">
-          <option value="recent">Mới nhất</option>
-          <option value="popular">Phổ biến nhất</option>
-          <option value="oldest">Cũ nhất</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Search Results -->
-    <div class="results-section">
-      <div v-if="searchPerformed" class="results-info">
-        <h2 v-if="filteredPosts.length > 0">
-          Tìm thấy {{ filteredPosts.length }} kết quả
-          <span v-if="searchQuery" class="search-term"
-            >cho "{{ searchQuery }}"</span
-          >
-        </h2>
-        <h2 v-else>Không tìm thấy kết quả nào</h2>
-      </div>
-
-      <!-- Results Grid -->
-      <div class="results-grid row cols-3">
-        <ScrollReveal 
-          v-for="post in filteredPosts" 
-          :key="post.id"
+  <div class="noir-section min-vh-100">
+    <div class="container-fluid px-lg-5">
+      <!-- Search Header -->
+      <header class="mb-5 pb-4 border-bottom border-brutal">
+        <div
+          class="display-font text-acid text-small mb-2 flicker tracking-wide lh-tight"
         >
-          <PostCard :post="post" />
-        </ScrollReveal>
-      </div>
-
-      <!-- Empty State -->
-      <div v-if="!searchPerformed" class="empty-state">
-        <div class="empty-icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="icon-empty"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+          // ARCHIVE_QUERY_TERMINAL
         </div>
-        <h3>Bắt đầu tìm kiếm</h3>
-        <p>Nhập từ khóa để tìm các bài viết bạn quan tâm</p>
+        <h1
+          class="display-font text-white mb-4 tracking-wide lh-tight"
+          style="font-size: clamp(3rem, 10vw, 6rem)"
+        >
+          EXPLORE_VOIDS
+        </h1>
+
+        <div class="row g-4 align-items-end">
+          <div class="col-lg-8">
+            <div class="input-group input-group-lg shadow-brutal">
+              <label for="archive-search" class="visually-hidden"
+                >Search Keyword</label
+              >
+              <input
+                id="archive-search"
+                v-model="searchQuery"
+                type="text"
+                class="form-control"
+                placeholder="KEYWORD_SEARCH..."
+                @keyup.enter="performSearch"
+              />
+              <button
+                @click="performSearch"
+                class="btn btn-primary px-5"
+                aria-label="Execute search"
+              >
+                EXECUTE
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="d-flex gap-3">
+              <div class="w-100">
+                <label
+                  for="sort-select"
+                  class="display-font text-acid text-tiny mb-2 d-block tracking-wide lh-tight"
+                  >SORT_BY</label
+                >
+                <select id="sort-select" v-model="sortBy" class="form-control">
+                  <option value="recent">NEWEST</option>
+                  <option value="popular">MOST_ACCESSED</option>
+                  <option value="oldest">OLDEST_DATA</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="row g-5">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+          <div class="sticky-top" style="top: 120px">
+            <div class="mb-5 border border-brutal p-4 bg-surface shadow-brutal">
+              <h3
+                class="display-font text-acid text-small mb-4 pb-2 border-bottom border-brutal-dim tracking-wide lh-tight"
+              >
+                // FILTERS
+              </h3>
+
+              <div class="mb-4">
+                <span
+                  class="display-font text-muted text-tiny mb-3 d-block tracking-wide lh-tight"
+                  >CATEGORIES</span
+                >
+                <div class="d-flex flex-column gap-2">
+                  <button
+                    v-for="category in categories"
+                    :key="category"
+                    @click="
+                      selectedCategory =
+                        selectedCategory === category ? '' : category
+                    "
+                    :class="[
+                      'btn text-start display-font text-small',
+                      selectedCategory === category
+                        ? 'btn-primary'
+                        : 'text-muted hover-acid',
+                    ]"
+                    :aria-label="'Filter by ' + category"
+                  >
+                    [{{ category.toUpperCase() }}]
+                  </button>
+                </div>
+              </div>
+
+              <button
+                @click="resetFilters"
+                class="btn btn-outline-primary btn-sm w-100 mt-4 py-3"
+              >
+                RESET_FILTERS
+              </button>
+            </div>
+
+            <div
+              class="display-font text-muted text-tiny opacity-25 mt-5 tracking-wide lh-tight"
+            >
+              SEARCH_STATUS: {{ searchPerformed ? "ACTIVE" : "IDLE" }}<br />
+              RESULT_COUNT: {{ filteredPosts.length }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Flow -->
+        <div class="col-lg-9 border-start border-brutal ps-lg-5">
+          <div v-if="searchPerformed">
+            <div v-if="filteredPosts.length > 0">
+              <div class="row g-5">
+                <div
+                  v-for="post in filteredPosts"
+                  :key="post.id"
+                  class="col-md-6"
+                >
+                  <!-- Reusing the logic from PostCard but styled for search results -->
+                  <div
+                    class="card h-100 p-0 border-brutal shadow-brutal-hover overflow-hidden group"
+                  >
+                    <div
+                      class="card-img-container border-bottom border-brutal overflow-hidden"
+                      style="height: 200px"
+                    >
+                      <img
+                        :src="post.image"
+                        class="w-100 h-100 object-fit-cover grayscale group-hover-clear"
+                        alt="Post visual"
+                      />
+                    </div>
+                    <div class="card-body p-4 bg-surface d-flex flex-column">
+                      <div
+                        class="d-flex justify-content-between text-acid display-font text-tiny mb-3 opacity-50 tracking-wide lh-tight"
+                      >
+                        <span>{{ post.category.toUpperCase() }}</span>
+                        <span>{{ post.date }}</span>
+                      </div>
+                      <h3
+                        class="display-font fs-4 text-white mb-3 tracking-wide lh-tight group-hover-acid transition"
+                      >
+                        {{ post.title.toUpperCase() }}
+                      </h3>
+                      <router-link
+                        :to="'/post/' + post.id"
+                        class="btn btn-outline-primary w-100 mt-auto py-3"
+                        >DECRYPT_FILE</router-link
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="py-5 text-center">
+              <div
+                class="display-font fs-1 text-muted opacity-25 flicker tracking-wide lh-tight"
+              >
+                NO_MATCHING_DATA_SIGNALS
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="py-5 text-center opacity-50">
+            <div
+              class="display-font text-muted mb-4 flicker opacity-25 tracking-wide lh-tight"
+              style="font-size: clamp(4rem, 15vw, 10rem)"
+            >
+              SEARCH
+            </div>
+            <p class="display-font fs-4 text-muted tracking-wide lh-tight">
+              WAITING_FOR_QUERYINPUT...
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { posts as defaultPosts } from "../data/posts.js";
 import { getPosts } from "../data/postStore.js";
-import PostCard from "../components/PostCard.vue";
-import ScrollReveal from "../components/ScrollReveal.vue";
 
 const searchQuery = ref("");
 const searchPerformed = ref(false);
@@ -129,8 +199,6 @@ const allPosts = computed(() => getPosts() || defaultPosts);
 
 const filteredPosts = computed(() => {
   let results = allPosts.value;
-
-  // Filter by search query
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     results = results.filter(
@@ -140,161 +208,84 @@ const filteredPosts = computed(() => {
         post.tags.some((tag) => tag.toLowerCase().includes(query)),
     );
   }
-
-  // Filter by category
   if (selectedCategory.value) {
     results = results.filter(
       (post) => post.category === selectedCategory.value,
     );
   }
-
-  // Sort
   if (sortBy.value === "popular") {
-    results = [...results].sort(() => Math.random() - 0.5); // Simulated popularity
+    results = [...results].sort(() => Math.random() - 0.5);
   } else if (sortBy.value === "oldest") {
     results = [...results].sort((a, b) => new Date(a.date) - new Date(b.date));
   } else {
     results = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
   }
-
   return results;
 });
-
-const formatDate = (date) => {
-  return new Intl.DateTimeFormat("vi-VN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date || new Date());
-};
-
-const estimateReadTime = (content) => {
-  const wordCount = content.split(/\s+/).length;
-  return Math.ceil(wordCount / 200);
-};
 
 const performSearch = () => {
   searchPerformed.value = true;
 };
+const resetFilters = () => {
+  searchQuery.value = "";
+  selectedCategory.value = "";
+  searchPerformed.value = false;
+};
 </script>
 
 <style scoped>
-.search-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 24px;
+.grayscale {
+  filter: grayscale(1) contrast(1.2);
+  transition: filter 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
-
-.search-header {
-  margin-bottom: 64px;
+.bg-surface {
+  background-color: var(--bg-surface) !important;
 }
-
-.search-title {
-  font-size: 3rem;
-  font-weight: 900;
-  color: var(--color-text);
-  margin-bottom: 32px;
-  letter-spacing: -0.02em;
+.group:hover .group-hover-clear {
+  filter: grayscale(0) contrast(1);
 }
-
-.search-box {
-  display: flex;
-  gap: 16px;
+.shadow-brutal-hover {
+  transition:
+    transform 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
-
-.search-input {
-  flex: 1;
+.shadow-brutal-hover:hover {
+  transform: translate3d(0, -8px, 0);
+  box-shadow: 0px 8px 16px 0px rgba(0, 255, 65, 0.4);
 }
-
-.search-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 32px;
+.group-hover-acid:hover {
+  color: var(--accent-primary) !important;
 }
-
-.filters-section {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  margin-bottom: 64px;
-  padding: 32px;
-  background: white;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+.group:hover .group-hover-acid {
+  color: var(--accent-primary) !important;
 }
-
-.filter-header {
-  font-size: 1.25rem;
-  font-weight: 800;
-  margin: 0;
+.text-tiny {
+  font-size: 0.7rem;
 }
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.text-small {
+  font-size: 0.85rem;
 }
-
-.filter-label {
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #64748b;
-  letter-spacing: 0.05em;
+.border-brutal-dim {
+  border-color: rgba(224, 224, 255, 0.05) !important;
 }
-
-.filter-options {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+.tracking-wide {
+  letter-spacing: 0.15em !important;
 }
-
-.filter-btn {
-  padding: 8px 16px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  background: white;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: var(--transition);
+.lh-tight {
+  line-height: 1.1 !important;
 }
-
-.filter-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+.lh-base {
+  line-height: 1.6 !important;
 }
-
-.filter-btn.active {
-  background: var(--color-primary);
-  color: white;
-  border-color: var(--color-primary);
-}
-
-.filter-select {
-  padding: 10px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  font-weight: 700;
-  max-width: 200px;
-}
-
-.results-info {
-  margin-bottom: 32px;
-}
-
-.results-info h2 {
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.empty-state {
-  text-align: center;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 80px 0;
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 </style>

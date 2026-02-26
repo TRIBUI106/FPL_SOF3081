@@ -1,112 +1,203 @@
 <template>
-  <div>
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-content">
-        <h1 class="hero-title">Khám phá Thế giới Công nghệ</h1>
-        <p class="hero-subtitle">
-          Cộng đồng chia sẻ kiến thức về lập trình, web development và công nghệ
-          hiện đại
-        </p>
-        <div class="hero-buttons">
-          <router-link to="/register" class="btn btn-primary btn-lg"
-            >Bắt đầu ngay</router-link
-          >
-          <a href="#posts" class="btn btn-secondary btn-lg">Khám phá</a>
-        </div>
-      </div>
-    </section>
+  <div class="home-noir">
+    <h2 class="visually-hidden">HOME_ARCHIVE_INTERFACE</h2>
 
-    <!-- Category Filter -->
-    <section class="filter-section">
-      <div class="container text-center">
-        <h3 class="mb-4">Danh mục</h3>
-        <div class="category-tags">
-          <button
-            v-for="category in categories"
-            :key="category"
-            @click="
-              selectedCategory = selectedCategory === category ? '' : category
-            "
-            :class="['tag', { 'tag-active': selectedCategory === category }]"
-          >
-            {{ category }}
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="stat-item">
-          <div class="stat-number">{{ allPosts.length }}+</div>
-          <div class="stat-label">Bài viết</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">
-            {{ Math.floor(Math.random() * 5000) + 1000 }}
+    <!-- Cinematic Hero: Extreme Asymmetry (90/10) -->
+    <section
+      class="noir-section position-relative min-vh-100 d-flex align-items-center"
+    >
+      <div class="container-fluid px-lg-5">
+        <div class="row align-items-center">
+          <div class="col-lg-10">
+            <h1
+              class="display-font text-white mb-0"
+              style="
+                font-size: clamp(3.5rem, 15vw, 12rem);
+                line-height: 1.1;
+                letter-spacing: 0.15em;
+              "
+            >
+              <span class="flicker">ETHEREAL</span><br />
+              <span class="text-acid">ARCHIVE.</span>
+            </h1>
+            <p
+              class="display-font text-muted mt-4 opacity-75 max-w-ch"
+              style="font-size: clamp(1.2rem, 2vw, 2rem); line-height: 1.4"
+            >
+              // RESEARCH. LOGS. VOIDS. <br />
+              THE QUANTUM BLOGGING INTERFACE FOR THE DEEP WEB.
+            </p>
+            <div class="d-flex flex-wrap gap-4 mt-5">
+              <router-link to="/register" class="btn btn-primary btn-lg px-5"
+                >INITIALIZE_ENTRY</router-link
+              >
+              <a href="#archives" class="btn btn-outline-primary btn-lg px-5"
+                >ACCESS_DATA</a
+              >
+            </div>
           </div>
-          <div class="stat-label">Độc giả hàng tháng</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">
-            {{ Math.floor(Math.random() * 500) + 100 }}
-          </div>
-          <div class="stat-label">Thành viên cộng đồng</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Posts Section -->
-    <section class="posts-section" id="posts">
-      <div class="container">
-        <ScrollReveal>
-          <h2 class="section-title">Bài viết mới nhất</h2>
-        </ScrollReveal>
-        
-        <div v-if="filteredPosts.length > 0" class="row cols-3">
-          <ScrollReveal 
-            v-for="post in filteredPosts" 
-            :key="post.id"
-          >
-            <PostCard :post="post" />
-          </ScrollReveal>
-        </div>
-
-        <div v-else class="no-posts">
-          <div class="empty-state">
-            <span class="empty-icon">📭</span>
-            <p>Không có bài viết nào trong danh mục này</p>
+          <div class="col-lg-2 d-none d-lg-block text-end opacity-25">
+            <div
+              class="display-font text-acid"
+              style="
+                writing-mode: vertical-rl;
+                font-size: clamp(1rem, 2vw, 2.5rem);
+                letter-spacing: 0.2rem;
+              "
+            >
+              STATUS: ONLINE // 2026.02.26
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Newsletter Section -->
-    <section class="newsletter-section">
-      <div class="container">
-        <div class="newsletter-content">
-          <h2>Đăng ký nhận tin</h2>
-          <p>
-            Nhận các bài viết mới nhất và kiến thức hữu ích trực tiếp vào email
-          </p>
-          <form @submit.prevent="subscribeNewsletter" class="newsletter-form">
-            <input
-              v-model="emailNewsletter"
-              type="email"
-              class="input-newsletter"
-              placeholder="Nhập email của bạn..."
-              required
-            />
-            <button type="submit" class="btn btn-primary">Đăng ký</button>
-          </form>
-          <p
-            v-if="newsletterMessage"
-            :class="['newsletter-message', newsletterStatus]"
+    <!-- Stats: Brutalist Grid -->
+    <section class="border-bottom border-brutal bg-surface py-5">
+      <div class="container-fluid px-lg-5">
+        <div class="row g-0">
+          <div class="col-md-4 border border-brutal p-5 text-center">
+            <div
+              class="display-font text-acid tracking-wide lh-tight"
+              style="font-size: clamp(2.5rem, 5vw, 5rem)"
+            >
+              {{ allPosts.length }}
+            </div>
+            <div class="display-font text-muted fs-5 tracking-wide lh-tight">
+              ENTRIES_STORED
+            </div>
+          </div>
+          <div class="col-md-4 border border-brutal p-5 text-center">
+            <div
+              class="display-font text-acid tracking-wide lh-tight"
+              style="font-size: clamp(2.5rem, 5vw, 5rem)"
+            >
+              4.2K+
+            </div>
+            <div class="display-font text-muted fs-5 tracking-wide lh-tight">
+              NEURAL_LINKS
+            </div>
+          </div>
+          <div class="col-md-4 border border-brutal p-5 text-center">
+            <div
+              class="display-font text-acid tracking-wide lh-tight"
+              style="font-size: clamp(2.5rem, 5vw, 5rem)"
+            >
+              0.03s
+            </div>
+            <div class="display-font text-muted fs-5 tracking-wide lh-tight">
+              SYNC_LATENCY
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content: Staggered Layout -->
+    <section class="noir-section" id="archives">
+      <div class="container-fluid px-lg-5">
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-end mb-5 pb-4 border-bottom border-brutal"
+        >
+          <h2
+            class="display-font text-white mb-0 lh-tight tracking-wide"
+            style="font-size: clamp(2rem, 5vw, 4rem)"
           >
-            {{ newsletterMessage }}
-          </p>
+            LATEST_SIGNALS
+          </h2>
+          <div class="d-flex flex-wrap gap-2 mt-3 mt-lg-0">
+            <button
+              v-for="category in categories"
+              :key="category"
+              @click="
+                selectedCategory = selectedCategory === category ? '' : category
+              "
+              :class="[
+                'btn btn-sm px-4',
+                selectedCategory === category
+                  ? 'btn-primary'
+                  : 'btn-outline-primary',
+              ]"
+              :aria-label="'Filter by ' + category"
+            >
+              [{{ category.toUpperCase() }}]
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-5 mb-5">
+          <div v-if="filteredPosts.length > 0" class="col-12">
+            <div class="row g-5">
+              <div
+                v-for="(post, index) in filteredPosts"
+                :key="post.id"
+                class="col-md-6 col-xl-4"
+                :class="{ 'mt-lg-5': index % 2 !== 0 }"
+              >
+                <PostCard :post="post" />
+              </div>
+            </div>
+          </div>
+          <div v-else class="col-12 py-5 text-center">
+            <div
+              class="display-font fs-1 text-muted opacity-25 flicker tracking-wide lh-tight"
+            >
+              NO_SIGNALS_FOUND_IN_SECTOR
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Communication: Brutalist Newsletter -->
+    <section class="noir-section border-top border-brutal bg-surface">
+      <div class="container">
+        <div class="row justify-content-center py-5">
+          <div class="col-lg-8 text-center">
+            <h2
+              class="display-font text-acid mb-4 lh-tight tracking-wide"
+              style="font-size: clamp(2rem, 5vw, 4rem)"
+            >
+              SUBSCRIBE_TO_THE_VOID
+            </h2>
+            <p
+              class="display-font text-muted mb-5 tracking-normal lh-base max-w-ch mx-auto"
+              style="font-size: clamp(1rem, 2vw, 1.4rem)"
+            >
+              ENCRYPTED UPDATES DIRECTLY TO YOUR NEURAL INTERFACE.
+              JOIN_10,000+_ENTITIES.
+            </p>
+            <form
+              @submit.prevent="subscribeNewsletter"
+              class="input-group input-group-lg"
+            >
+              <label for="newsletter-email" class="visually-hidden"
+                >Newsletter Email</label
+              >
+              <input
+                id="newsletter-email"
+                v-model="emailNewsletter"
+                type="email"
+                class="form-control"
+                placeholder="ENTITY@DOMAIN.COM"
+                required
+                aria-label="Email for newsletter"
+              />
+              <button
+                class="btn btn-primary px-5 shadow-none"
+                type="submit"
+                aria-label="Subscribe now"
+              >
+                TRANSMIT
+              </button>
+            </form>
+            <p
+              v-if="newsletterMessage"
+              class="mt-4 display-font text-acid tracking-wide lh-tight"
+            >
+              {{ newsletterMessage }}
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -114,18 +205,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import PostCard from "../components/PostCard.vue";
 import { posts as defaultPosts } from "../data/posts.js";
 import { getPosts, savePosts } from "../data/postStore.js";
-import PostCard from "../components/PostCard.vue";
-import ScrollReveal from "../components/ScrollReveal.vue";
 
-const router = useRouter();
 const selectedCategory = ref("");
 const emailNewsletter = ref("");
 const newsletterMessage = ref("");
-const newsletterStatus = ref("");
 
 const categories = ["Vue.js", "CSS", "JavaScript", "Web Design", "Backend"];
 
@@ -141,27 +228,14 @@ const filteredPosts = computed(() => {
   if (!selectedCategory.value) {
     return allPosts.value;
   }
-  return allPosts.value.filter((post) => post.category === selectedCategory.value);
+  return allPosts.value.filter(
+    (post) => post.category === selectedCategory.value,
+  );
 });
-
-const formatDate = (date) => {
-  return new Intl.DateTimeFormat("vi-VN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-};
-
-const estimateReadTime = (content) => {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-};
 
 const subscribeNewsletter = () => {
   if (emailNewsletter.value) {
-    newsletterMessage.value = "Cảm ơn bạn đã đăng ký!";
-    newsletterStatus.value = "success";
+    newsletterMessage.value = "SIGNAL_RECEIVED. WELCOME_TO_THE_VOID.";
     emailNewsletter.value = "";
     setTimeout(() => {
       newsletterMessage.value = "";
@@ -171,238 +245,35 @@ const subscribeNewsletter = () => {
 </script>
 
 <style scoped>
-.hero {
-  background: var(--color-primary);
-  color: white;
-  padding: 120px 0;
-  text-align: center;
-  margin-bottom: 64px;
-  position: relative;
-  overflow: hidden;
+.max-w-ch {
+  max-width: 65ch;
+}
+.tracking-wide {
+  letter-spacing: 0.15em !important;
+}
+.tracking-normal {
+  letter-spacing: normal !important;
+}
+.lh-tight {
+  line-height: 1.1 !important;
+}
+.lh-base {
+  line-height: 1.6 !important;
 }
 
-.hero::after {
-  content: "";
-  position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.1) 0%,
-    transparent 70%
-  );
-  z-index: 1;
+.home-noir {
+  overflow-x: hidden;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.hero-title {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  margin-bottom: 24px;
-  color: white;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 48px;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 650px;
-  margin-left: auto;
-  margin-right: auto;
-  font-weight: 400;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: white;
-  color: var(--color-primary);
-}
-
-.filter-section {
-  padding: 64px 0;
-  background: white;
-  border-bottom: 1px solid var(--border);
-}
-
-.category-tags {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.tag {
-  padding: 12px 24px;
-  border: 1px solid var(--border);
-  background: white;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.tag:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-2px);
-}
-
-.tag-active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: white;
-}
-
-.stats-section {
-  background: var(--color-text);
-  color: white;
-  padding: 80px 0;
-}
-
-.stats-section .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 48px;
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin-bottom: 8px;
-  color: var(--color-cta);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.posts-section {
-  padding: 80px 0;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 900;
-  margin-bottom: 48px;
-  text-align: center;
-  color: var(--color-text);
-}
-
-.post-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  transition: var(--transition);
-}
-
-.post-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: var(--transition);
-}
-
-.post-card-link:hover .post-card {
-  transform: translateY(-8px);
-}
-
-.newsletter-section {
-  background: var(--color-primary);
-  padding: 100px 0;
-  color: white;
-}
-
-.newsletter-content {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.newsletter-content h2 {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 24px;
-  color: white;
-}
-
-.newsletter-content p {
-  font-size: 1.25rem;
-  margin-bottom: 48px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.newsletter-form {
-  display: flex;
-  gap: 16px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.input-newsletter {
-  flex: 1;
-  border-radius: 30px;
-  border: none;
-  padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1rem;
-}
-
-.input-newsletter::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.input-newsletter:focus {
-  background: rgba(255, 255, 255, 0.2);
-  outline: 2px solid white;
-}
-
-.newsletter-form .btn-primary {
-  background: white;
-  color: var(--color-primary);
-  border-radius: 30px;
-}
-
-@media (max-width: 768px) {
-  .hero {
-    padding: 80px 0;
-  }
-  .newsletter-form {
-    flex-direction: column;
-  }
-  .newsletter-form .btn {
-    width: 100%;
-  }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 </style>

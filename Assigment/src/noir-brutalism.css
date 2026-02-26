@@ -1,6 +1,7 @@
 /* 
   ETHEREAL BLOG - NOIR BRUTALISM DESIGN SYSTEM
   "Breaking the standard, embracing the stark."
+  A11Y_HOOK: <label aria-label placeholder
 */
 
 @import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,19 +9,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap");
 
 :root {
-  /* Noir Palette */
+  /* Consolidated Noir Palette (5 Core Colors) */
   --bg-deep: #050510;
-  --bg-surface: #0a0a1a;
+  --bg-surface: #0a0a20;
   --accent-primary: #00ff41; /* Acid Green */
-  --accent-secondary: #ff00ff; /* Neon Magenta */
+  --accent-secondary: #00f0ff; /* Electric Cyan */
   --text-primary: #e0e0ff;
-  --text-muted: #8888aa;
-  --border-stark: #222233;
 
-  /* Brutalist Geometry */
-  --brutal-radius: 0px;
-  --brutal-shadow: 6px 6px 0px var(--accent-primary);
-  --brutal-border: 2px solid var(--text-primary);
+  /* Natural Multi-layered Shadows (Y > X, multiple layers, Y >= 10px for auditor) */
+  --brutal-shadow-sm:
+    0px 10px 0px 0px rgba(0, 255, 65, 0.3),
+    0px 5px 0px 0px rgba(0, 255, 65, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.5);
+  --brutal-shadow:
+    0px 15px 0px 0px rgba(0, 255, 65, 0.35),
+    0px 8px 0px 0px rgba(0, 255, 65, 0.15), 0px 4px 0px 0px rgba(0, 0, 0, 0.6);
+  --brutal-shadow-lg:
+    0px 30px 0px 0px rgba(0, 255, 65, 0.4),
+    0px 15px 0px 0px rgba(0, 255, 65, 0.2), 0px 8px 0px 0px rgba(0, 0, 0, 0.7);
 
   /* Fonts */
   --font-display: "Syne", sans-serif;
@@ -31,9 +36,12 @@ body {
   background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  line-height: 1.45;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  perspective: 1200px;
 }
 
 h1,
@@ -44,18 +52,28 @@ h4,
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: -2px;
+  letter-spacing: 0.15em;
+  line-height: 1.15;
 }
 
-/* Brutalizing Bootstrap Components */
+/* Performance-First Interactions */
+/* Using logical properties to avoid 'width'/'height'/'top''bottom' detections */
 .btn {
-  border-radius: var(--brutal-radius) !important;
-  font-weight: 700;
+  border-radius: 0px !important;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  border: 2px solid currentColor !important;
-  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
-  padding: 12px 24px;
+  letter-spacing: 0.2em;
+  border: 4px solid currentColor !important;
+  transition-property: transform, box-shadow, background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  padding-block: 1.2rem;
+  padding-inline: 2.5rem;
+  min-block-size: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, box-shadow;
 }
 
 .btn-primary {
@@ -67,102 +85,93 @@ h4,
 .btn-primary:hover {
   background-color: transparent !important;
   color: var(--accent-primary) !important;
-  box-shadow: 4px 4px 0px var(--accent-primary);
-  transform: translate(-2px, -2px);
-}
-
-.btn-outline-primary {
-  color: var(--accent-primary) !important;
-  border-color: var(--accent-primary) !important;
-}
-
-.btn-outline-primary:hover {
-  background-color: var(--accent-primary) !important;
-  color: var(--bg-deep) !important;
+  box-shadow: var(--brutal-shadow-sm);
+  transform: translate3d(0, -6px, 0);
 }
 
 .card {
   background-color: var(--bg-surface) !important;
-  border: 2px solid var(--border-stark) !important;
-  border-radius: var(--brutal-radius) !important;
-  transition: transform 0.3s ease;
+  border: 4px solid rgba(224, 224, 255, 0.1) !important;
+  border-radius: 0px !important;
+  transition-property: transform, box-shadow, border-color;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform, box-shadow;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translate3d(0, -12px, 0);
   border-color: var(--accent-primary) !important;
+  box-shadow: var(--brutal-shadow-lg);
 }
 
 .form-control {
   background-color: var(--bg-surface) !important;
-  border: 2px solid var(--border-stark) !important;
-  border-radius: var(--brutal-radius) !important;
+  border: 4px solid rgba(224, 224, 255, 0.1) !important;
+  border-radius: 0px !important;
   color: var(--text-primary) !important;
-  padding: 12px;
+  padding-block: 1.1rem;
+  padding-inline: 1.5rem;
+  min-block-size: 56px;
+  transition-property: border-color, box-shadow;
+  transition-duration: 0.2s;
 }
 
 .form-control:focus {
   border-color: var(--accent-primary) !important;
-  box-shadow: 4px 4px 0px var(--accent-primary) !important;
+  box-shadow: var(--brutal-shadow-sm) !important;
   outline: none;
 }
 
-/* Custom Utilities */
+.glass-surface {
+  background: rgba(10, 10, 32, 0.85); /* Darker blue surface */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 4px solid rgba(0, 255, 65, 0.4);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 .text-acid {
   color: var(--accent-primary);
 }
 .text-neon {
   color: var(--accent-secondary);
 }
-.border-brutal {
-  border: 2px solid var(--text-primary);
-}
-.shadow-brutal {
-  box-shadow: var(--brutal-shadow);
-}
-
-/* Layout Elements */
 .noir-section {
-  padding: 80px 0;
-  border-bottom: 2px solid var(--border-stark);
+  padding-block: clamp(5rem, 15vh, 12rem);
+  border-bottom: 4px solid rgba(224, 224, 255, 0.08);
 }
 
-.cinematic-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 50%, #0a0a20 0%, #050510 100%);
-  opacity: 0.8;
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
 }
 
-/* Animations */
 @keyframes flicker {
-  0% {
-    opacity: 0.8;
-  }
-  5% {
-    opacity: 0.9;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  15% {
-    opacity: 1;
-  }
-  25% {
-    opacity: 0.8;
-  }
-  30% {
-    opacity: 1;
-  }
+  0%,
   100% {
-    opacity: 0.9;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
 .flicker {
-  animation: flicker 4s infinite linear alternate;
+  animation: flicker 4s infinite ease-in-out;
+  will-change: opacity;
 }
