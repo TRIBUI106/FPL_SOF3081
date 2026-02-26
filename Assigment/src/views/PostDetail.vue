@@ -207,7 +207,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { posts } from "../data/posts.js";
+import { posts as defaultPosts } from "../data/posts.js";
+import { getPosts } from "../data/postStore.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -216,6 +217,8 @@ const newComment = ref("");
 const isLoggedIn = ref(localStorage.getItem("isLoggedIn") === "true");
 const isBookmarked = ref(false);
 const showShareMenu = ref(false);
+
+const allPosts = computed(() => getPosts() || defaultPosts);
 
 const currentUserName = computed(() => {
   const userData = JSON.parse(localStorage.getItem("userAccount") || "{}");
@@ -249,7 +252,7 @@ const comments = ref([
 
 const relatedPosts = computed(() => {
   if (!post.value) return [];
-  return posts.filter(
+  return allPosts.value.filter(
     (p) => p.category === post.value.category && p.id !== post.value.id
   );
 });
@@ -293,7 +296,7 @@ const addComment = () => {
 
 const loadPost = () => {
   const postId = parseInt(route.params.id);
-  const foundPost = posts.find((p) => p.id === postId);
+  const foundPost = allPosts.value.find((p) => p.id === postId);
   if (foundPost) {
     post.value = foundPost;
     window.scrollTo(0, 0);

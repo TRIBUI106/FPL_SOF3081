@@ -130,6 +130,13 @@
         @click="showMobileMenu = false"
         >Hồ sơ</router-link
       >
+      <router-link
+        v-if="isLoggedIn"
+        to="/my-posts"
+        class="mobile-link"
+        @click="showMobileMenu = false"
+        >Bài viết của tôi</router-link
+      >
       <button
         v-if="isLoggedIn"
         @click="handleLogout"

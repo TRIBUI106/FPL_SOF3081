@@ -77,37 +77,13 @@
       </div>
 
       <!-- Results Grid -->
-      <div class="results-grid">
-        <article
-          v-for="post in filteredPosts"
+      <div class="results-grid row cols-3">
+        <ScrollReveal 
+          v-for="post in filteredPosts" 
           :key="post.id"
-          class="result-card"
         >
-          <div class="result-image">
-            <img :src="post.image" :alt="post.title" />
-          </div>
-          <div class="result-content">
-            <div class="result-category">{{ post.category }}</div>
-            <h3 class="result-title">{{ post.title }}</h3>
-            <p class="result-excerpt">
-              {{ post.content.substring(0, 120) }}...
-            </p>
-            <div class="result-meta">
-              <span class="meta-item">{{ formatDate(post.date) }}</span>
-              <span class="meta-item"
-                >{{ estimateReadTime(post.content) }} phút đọc</span
-              >
-            </div>
-            <div class="result-tags">
-              <span v-for="tag in post.tags" :key="tag" class="tag">{{
-                tag
-              }}</span>
-            </div>
-            <router-link :to="`/post/${post.id}`" class="read-btn"
-              >Đọc tiếp →</router-link
-            >
-          </div>
-        </article>
+          <PostCard :post="post" />
+        </ScrollReveal>
       </div>
 
       <!-- Empty State -->
@@ -137,7 +113,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { posts as defaultPosts } from "../data/posts.js";
+import { getPosts } from "../data/postStore.js";
+import PostCard from "../components/PostCard.vue";
+import ScrollReveal from "../components/ScrollReveal.vue";
 
 const searchQuery = ref("");
 const searchPerformed = ref(false);
@@ -146,68 +125,7 @@ const sortBy = ref("recent");
 
 const categories = ["Vue.js", "CSS", "JavaScript", "Web Design", "Backend"];
 
-const allPosts = ref([
-  {
-    id: 1,
-    title: "Bắt đầu với Vue.js",
-    content:
-      "Vue.js là một framework JavaScript tiến bộ để xây dựng giao diện người dùng. Nó cung cấp ràng buộc dữ liệu, kiến trúc dựa trên thành phần và trải nghiệm phát triển tuyệt vời.",
-    category: "Vue.js",
-    tags: ["Vue.js", "JavaScript", "Frontend", "Tutorial"],
-    date: new Date(),
-    image: "https://picsum.photos/400/250?random=1",
-  },
-  {
-    id: 2,
-    title: "Các Best Practices trong Vue.js",
-    content:
-      "Những thực hành tốt nhất sẽ giúp bạn viết mã sạch hơn, dễ bảo trì và có hiệu suất tốt hơn.",
-    category: "Vue.js",
-    tags: ["Vue.js", "Best Practices", "Code Quality"],
-    date: new Date(Date.now() - 86400000),
-    image: "https://picsum.photos/400/250?random=2",
-  },
-  {
-    id: 3,
-    title: "CSS Grid vs Flexbox",
-    content:
-      "So sánh chi tiết giữa CSS Grid và Flexbox để tìm ra giải pháp phù hợp cho dự án của bạn.",
-    category: "CSS",
-    tags: ["CSS", "Layout", "Web Design"],
-    date: new Date(Date.now() - 172800000),
-    image: "https://picsum.photos/400/250?random=3",
-  },
-  {
-    id: 4,
-    title: "JavaScript ES6: Những tính năng phải biết",
-    content:
-      "Khám phá những tính năng mới của ES6 như arrow function, const/let, classes và template literals.",
-    category: "JavaScript",
-    tags: ["JavaScript", "ES6", "Programming"],
-    date: new Date(Date.now() - 259200000),
-    image: "https://picsum.photos/400/250?random=4",
-  },
-  {
-    id: 5,
-    title: "Thiết kế responsive: Hướng dẫn hoàn chỉnh",
-    content:
-      "Học cách thiết kế website mà hoạt động tốt trên tất cả các thiết bị, từ mobile đến desktop.",
-    category: "Web Design",
-    tags: ["Web Design", "Responsive", "Mobile-First"],
-    date: new Date(Date.now() - 345600000),
-    image: "https://picsum.photos/400/250?random=5",
-  },
-  {
-    id: 6,
-    title: "Node.js và Express.js cho người mới bắt đầu",
-    content:
-      "Hướng dẫn từng bước để tạo server backend với Node.js và Express.js.",
-    category: "Backend",
-    tags: ["Node.js", "Express.js", "Backend", "JavaScript"],
-    date: new Date(Date.now() - 432000000),
-    image: "https://picsum.photos/400/250?random=6",
-  },
-]);
+const allPosts = computed(() => getPosts() || defaultPosts);
 
 const filteredPosts = computed(() => {
   let results = allPosts.value;
@@ -371,118 +289,12 @@ const performSearch = () => {
   font-weight: 800;
 }
 
-.results-grid {
-  display: grid;
-  gap: 32px;
-}
-
-.result-card {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 32px;
-  background: white;
-  border-radius: 24px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-.result-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
-}
-
-.result-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.result-content {
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-}
-
-.result-category {
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--color-primary);
-  margin-bottom: 12px;
-}
-
-.result-title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-
-.result-excerpt {
-  color: #64748b;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.result-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 0.875rem;
-  color: #94a3b8;
-  margin-bottom: 24px;
-}
-
-.result-tags {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.tag {
-  padding: 4px 10px;
-  background: var(--color-background);
-  color: var(--color-primary);
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.read-btn {
-  font-weight: 800;
-  color: var(--color-primary);
-  text-decoration: none;
-  margin-top: auto;
+.empty-state {
+  text-align: center;
 }
 
 .empty-state {
   text-align: center;
   padding: 80px 0;
-}
-
-.icon-empty {
-  color: #cbd5e1;
-  margin-bottom: 24px;
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.empty-state p {
-  color: #64748b;
-}
-
-@media (max-width: 900px) {
-  .result-card {
-    grid-template-columns: 1fr;
-  }
-  .result-image {
-    height: 240px;
-  }
-  .search-box {
-    flex-direction: column;
-  }
 }
 </style>

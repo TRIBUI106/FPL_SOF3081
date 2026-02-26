@@ -1,0 +1,205 @@
+1
+
+Module/môn: Xây dựng giao
+diện tương tác Backend
+
+Số hiệu assignment: 1/1
+
+Người điều phối của FPT
+Polytechnic:
+
+Ngày ban hành:
+
+% điểm: 60%
+
+Bài Assignment này đòi hỏi sinh viên phải dùng khoảng 45h làm để hoàn
+thành
+Tương ứng với mục tiêu môn học:
+Hiểu và thực hành các kiến thức cơ bản và nâng cao về Vue.js như
+template syntax, data binding, reactivity, conditional rendering, list
+rendering, class và style binding, form binding, event handling, Vue Router
+và authentication.
+
+==========================================================
+
+Assignment
+Xây dựng giao diện tương tác Backend
+Mục tiêu cụ thể
+
+Sau bài assignment này, sinh viên sẽ biết cách:
+Hiểu và thực hành các kiến thức cơ bản và nâng cao về Vue.js
+như template syntax, data binding, reactivity, conditional
+rendering, list rendering, class và style binding, form binding,
+event handling, Vue Router và authentication.
+Các công cụ cần có Phần mềm Visual Studio Code
+Tài nguyên
+
+Slides, Labs, Assignment, Syllabus
+
+ĐẶT VẤN ĐỀ
+XÂY DỰNG ỨNG DỤNG QUẢN LÝ TRANG BLOG VỚI VUEJS VÀ BOOTSTRAP
+1. Tổng quan về đề tài
+Trong bài assignment này, sinh viên sẽ xây dựng một ứng dụng web quản lý
+trang blog sử dụng Vue.js và Bootstrap. Ứng dụng sẽ cho phép người dùng đăng ký
+tài khoản, đăng nhập để đăng bài viết, bình luận vào các bài viết, và quản lý thông
+tin cá nhân.
+
+Xây dựng giao diện tương tác Backend
+
+2
+
+Bài tập này sẽ giúp sinh viên thực hành các kiến thức cơ bản và nâng cao về
+Vue.js như template syntax, data binding, reactivity, conditional rendering, list
+rendering, class và style binding, form binding, event handling, Vue Router và
+authentication.
+2. Các chức năng chính của ứng dụng
+2.1 Đăng ký và đăng nhập
+-
+
+Xây dựng trang đăng ký cho phép người dùng tạo tài khoản mới với các thông
+tin như tên, email, và mật khẩu.
+
+-
+
+Xây dựng trang đăng nhập để người dùng có thể đăng nhập vào hệ thống.
+
+2.2 Đăng bài viết
+-
+
+Sau khi đăng nhập, người dùng có thể đăng bài viết mới.
+
+-
+
+Bài viết cần có các trường thông tin như tiêu đề, nội dung, và có thể thêm hình
+ảnh minh họa.
+
+-
+
+Người dùng có thể chỉnh sửa hoặc xóa bài viết của mình.
+
+2.3 Bình luận vào bài viết
+-
+
+Người dùng sau khi đăng nhập có thể bình luận vào các bài viết khác.
+
+-
+
+Mỗi bình luận cần hiển thị tên người dùng, nội dung bình luận và thời gian
+đăng bình luận.
+
+2.4 Trang thông tin cá nhân
+-
+
+Xây dựng trang thông tin cá nhân cho người dùng để họ có thể xem và chỉnh
+sửa thông tin cá nhân của mình.
+
+-
+
+Các thông tin có thể chỉnh sửa bao gồm tên, email, mật khẩu, và ảnh đại diện.
+
+3. Yêu cầu kỹ thuật
+-
+
+Ứng dụng phải được xây dựng bằng Vue.js kết hợp với Bootstrap để tạo giao diện
+người dùng.
+
+-
+
+Sử dụng các kiến thức về template syntax để hiển thị dữ liệu và cấu trúc giao diện.
+
+-
+
+Thực hiện data binding và reactivity để đảm bảo giao diện người dùng tự động cập
+nhật khi dữ liệu thay đổi.
+
+-
+
+Áp dụng conditional rendering để hiển thị hoặc ẩn các thành phần giao diện dựa
+trên trạng thái của ứng dụng.
+
+-
+
+Sử dụng list rendering để hiển thị danh sách bài viết và danh sách bình luận.
+
+Xây dựng giao diện tương tác Backend
+
+3
+
+-
+
+Sử dụng class và style binding để thay đổi giao diện động dựa trên trạng thái của
+ứng dụng.
+
+-
+
+Xử lý các sự kiện người dùng như click, submit form, và các sự kiện khác thông
+qua event handling của Vue.js.
+
+-
+
+Sử dụng form binding để liên kết dữ liệu form với các biến trong Vue.js.
+
+-
+
+Thiết lập Vue Router để quản lý các route trong ứng dụng, bao gồm cả các route
+được bảo vệ yêu cầu xác thực.
+
+-
+
+Triển khai hệ thống authentication cơ bản để bảo vệ các chức năng như đăng bài,
+chỉnh sửa và xóa bài viết.
+
+YÊU CẦU
+Các công việc yêu cầu cụ thể như sau:
+Y1 – Yêu cầu về tổ chức dự án
+1. Khởi tạo dự án VueJS, cài Bootstrap
+2. Xây dựng giao diện các trang theo yêu cầu
+Y2 – Yêu cầu về hoàn thiện các chức năng và xử lý dữ liệu động
+1. Đăng ký, đăng nhập
+2. Đăng bài viết
+3. Bình luận bài viết
+4. Quản lý thông tin cá nhân
+5. Các chức năng khác do giảng viên hướng dẫn gợi ý (không bắt buộc)
+MÔ TẢ SẢN PHẨM PHẢI NỘP
+N1 – Mã nguồn website
+Folder có tên <tên project> chứa project website.
+Đóng gói tất cả các sản phẩm trên thành một file nén theo định dạng
+SOF308_<Mã SV>_ Assigment.zip để đưa lên hệ thống LMS theo yêu cầu của giảng viên.
+Lưu ý về cách đặt tên:
+Ví dụ về cách đặt tên gói:
+SOF308_ PD25365_Assignment.zip
+
+Xây dựng giao diện tương tác Backend
+
+4
+
+THANG ĐÁNH GIÁ
+- Website hoạt động tốt trên localhost
+A: 70%‐100%
+
+- Giao diện web ứng dụng đẹp, dễ nhìn
+- Đáp ứng đầy đủ Y1, Y2
+- Đáp ứng thêm Y2.5 (không bắt buộc)
+
+B: 60%‐69%
+
+- Đáp ứng được Y1.1, Y1.2
+- Đáp ứng thêm Y2.1, Y2.2
+
+C: 50%‐59%
+
+- Đáp ứng được Y1.1, Y1.2
+- Đáp ứng thêm Y2.1 hoặc Y2.2
+
+D: 40%‐49%
+
+- Đáp ứng được Y1.1 hoặc Y1.2
+- Không đóng gói được theo yêu cầu
+
+D: < 40%
+
+- Website không chạy
+- Thiếu sản phẩm cần nộp
+
+Xây dựng giao diện tương tác Backend
+

@@ -61,39 +61,19 @@
     <!-- Posts Section -->
     <section class="posts-section" id="posts">
       <div class="container">
-        <h2 class="section-title">Bài viết mới nhất</h2>
+        <ScrollReveal>
+          <h2 class="section-title">Bài viết mới nhất</h2>
+        </ScrollReveal>
+        
         <div v-if="filteredPosts.length > 0" class="row cols-3">
-          <router-link
-            v-for="post in filteredPosts"
+          <ScrollReveal 
+            v-for="post in filteredPosts" 
             :key="post.id"
-            :to="`/post/${post.id}`"
-            class="post-card-link"
           >
-            <article class="card post-card">
-              <div class="card-image">
-                <img :src="post.image" :alt="post.title" loading="lazy" />
-                <span class="badge badge-primary">{{ post.category }}</span>
-              </div>
-              <div class="card-body">
-                <h3 class="post-title">{{ post.title }}</h3>
-                <p class="post-excerpt">{{ post.content.substring(0, 150) }}...</p>
-                <footer class="post-footer">
-                  <div class="post-meta">
-                    <span class="post-date">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      {{ formatDate(post.date) }}
-                    </span>
-                    <span class="reading-time">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                      {{ estimateReadTime(post.content) }} phút
-                    </span>
-                  </div>
-                  <span class="read-link">Đọc tiếp →</span>
-                </footer>
-              </div>
-            </article>
-          </router-link>
+            <PostCard :post="post" />
+          </ScrollReveal>
         </div>
+
         <div v-else class="no-posts">
           <div class="empty-state">
             <span class="empty-icon">📭</span>
@@ -136,7 +116,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { posts } from "../data/posts.js";
+import { posts as defaultPosts } from "../data/posts.js";
+import { getPosts, savePosts } from "../data/postStore.js";
+import PostCard from "../components/PostCard.vue";
+import ScrollReveal from "../components/ScrollReveal.vue";
 
 const router = useRouter();
 const selectedCategory = ref("");
@@ -146,7 +129,13 @@ const newsletterStatus = ref("");
 
 const categories = ["Vue.js", "CSS", "JavaScript", "Web Design", "Backend"];
 
-const allPosts = ref(posts);
+// Initialize store if empty
+const stored = getPosts();
+if (!stored) {
+  savePosts(defaultPosts);
+}
+
+const allPosts = ref(getPosts() || defaultPosts);
 
 const filteredPosts = computed(() => {
   if (!selectedCategory.value) {
@@ -346,95 +335,6 @@ const subscribeNewsletter = () => {
 
 .post-card-link:hover .post-card {
   transform: translateY(-8px);
-}
-
-.card-image {
-  position: relative;
-  aspect-ratio: 16/10;
-  overflow: hidden;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: 500ms ease;
-}
-
-.post-card:hover .card-image img {
-  transform: scale(1.05);
-}
-
-.card-image .badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-}
-
-.card-body {
-  padding: 32px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.post-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: 16px;
-  line-height: 1.3;
-  color: var(--color-text);
-}
-
-.post-excerpt {
-  color: #64748b;
-  margin-bottom: 24px;
-  line-height: 1.7;
-  flex: 1;
-}
-
-.post-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-}
-
-.post-meta {
-  display: flex;
-  gap: 16px;
-  color: #94a3b8;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.post-date,
-.reading-time {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-}
-
-.read-link {
-  color: var(--color-primary);
-  font-weight: 700;
-  transition: var(--transition);
-}
-
-.read-link:hover {
-  transform: translateX(4px);
 }
 
 .newsletter-section {
